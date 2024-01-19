@@ -3,9 +3,6 @@ on:
   push:
   pull_request:
 
-env:
-  SATYSFI_VERSION: branch-dev-0-1-0-separate-saphe-from-satysfi
-
 jobs:
   build-demo:
     runs-on: ubuntu-latest
@@ -13,6 +10,6 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./
         with:
-          satysfi-version: ${{ env.SATYSFI_VERSION }}
-      - run: git clone --branch ${{ env.SATYSFI_VERSION }} --depth 1 https://github.com/gfngfn/SATySFi.git
+          satysfi-version: branch-dev-0-1-0-separate-saphe-from-satysfi
+      - run: git clone --branch dev-0-1-0-separate-saphe-from-satysfi --depth 1 https://github.com/gfngfn/SATySFi.git
       - run: cd SATySFi/demo && saphe solve demo.saty && saphe build demo.saty
