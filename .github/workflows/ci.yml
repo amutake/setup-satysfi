@@ -1,7 +1,6 @@
 name: ci
 on:
   push:
-  pull_request:
 
 jobs:
   build-demo:
@@ -12,4 +11,7 @@ jobs:
         with:
           satysfi-version: branch-dev-0-1-0-separate-saphe-from-satysfi
       - run: git clone --branch dev-0-1-0-separate-saphe-from-satysfi --depth 1 https://github.com/gfngfn/SATySFi.git
-      - run: cd SATySFi/demo && saphe solve demo.saty && saphe build demo.saty
+      - run: |
+          cd SATySFi/demo
+          saphe solve demo.saty
+          saphe build demo.saty
