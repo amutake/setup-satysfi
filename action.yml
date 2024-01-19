@@ -1,0 +1,22 @@
+name: Setup SATySFi environment
+description: Setup SATySFi environment
+author: amutake
+inputs:
+  satysfi-version:
+    description: SATySFi version
+    required: true
+    default: branch-dev-0-1-0-separate-saphe-from-satysfi
+runs:
+  using: composite
+  steps:
+    - if: ${{ runner.os }} != 'Linux'
+      run: |
+        echo "This action only supports Linux."
+        exit 1
+    - name: Extract SATySFi environment from container
+      run: |
+        container_id=$(docker create amutake/satysfi:${{ inputs.satysfi-version }})
+        docker cp ${container_id}:/usr/local/bin/satysfi /usr/local/bin/satysfi
+        docker cp ${container_id}:/usr/local/bin/saphe /usr/local/bin/saphe
+        docker cp ${container_id}:/root/.saphe ${HOME}/.saphe
+        docker rm ${container_id}
