@@ -9,7 +9,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - if: ${{ runner.os }} != 'Linux'
+    - if: ${{ runner.os != 'Linux' }}
       shell: bash
       run: |
         echo "This action only supports Linux."
