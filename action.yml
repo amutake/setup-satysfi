@@ -10,10 +10,12 @@ runs:
   using: composite
   steps:
     - if: ${{ runner.os }} != 'Linux'
+      shell: bash
       run: |
         echo "This action only supports Linux."
         exit 1
     - name: Extract SATySFi environment from container
+      shell: bash
       run: |
         container_id=$(docker create amutake/satysfi:${{ inputs.satysfi-version }})
         docker cp ${container_id}:/usr/local/bin/satysfi /usr/local/bin/satysfi
