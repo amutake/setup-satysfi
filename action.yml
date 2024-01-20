@@ -24,3 +24,6 @@ runs:
         docker cp ${container_id}:/root/.saphe ${HOME}/.saphe
         docker rm ${container_id}
       shell: bash
+branding:
+  icon: book
+  color: white
