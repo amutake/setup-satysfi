@@ -5,6 +5,8 @@ inputs:
   satysfi-version:
     description: SATySFi version
     required: true
+    # TODO: use latest version after releasing SATySFi v0.1.0
+    # currently, this action only supports below version
     default: branch-dev-0-1-0-separate-saphe-from-satysfi
 runs:
   using: composite

@@ -11,7 +11,16 @@ jobs:
         with:
           satysfi-version: branch-dev-0-1-0-separate-saphe-from-satysfi
       - run: git clone --branch dev-0-1-0-separate-saphe-from-satysfi --depth 1 https://github.com/gfngfn/SATySFi.git
-      - run: |
-          cd SATySFi/demo
-          saphe solve demo.saty
-          saphe build demo.saty
+      - uses: actions/cache@v4
+        with:
+          path: ~/.saphe
+          # SATySFi's demo does not have lock file
+          # In real project, you should use lock file like below
+          # key: ${{ runner.os }}-saphe-${{ hashFiles('./demo.saphe.lock.yaml') }}
+          key: ${{ runner.os }}-saphe-${{ hashFiles('./SATySFi/demo/demo.saphe.lock.expected') }}
+          restore-keys: |
+            ${{ runner.os }}-saphe-
+      - run: saphe solve demo.saty
+        working-directory: SATySFi/demo
+      - run: saphe build demo.saty
+        working-directory: SATySFi/demo
