@@ -3,8 +3,10 @@ on:
   push:
 
 jobs:
-  build-demo:
+  build-document:
     runs-on: ubuntu-latest
+    env:
+      WORKDIR: SATySFi/demo
     steps:
       - uses: actions/checkout@v4
       - uses: ./
@@ -17,10 +19,41 @@ jobs:
           # SATySFi's demo does not have lock file
           # In real project, you should use lock file like below
           # key: ${{ runner.os }}-saphe-${{ hashFiles('./demo.saphe.lock.yaml') }}
-          key: ${{ runner.os }}-saphe-${{ hashFiles('./SATySFi/demo/demo.saphe.lock.expected') }}
+          key: ${{ runner.os }}-saphe-${{ hashFiles(format('{0}/demo.saphe.lock.expected', env.WORKDIR)) }}
           restore-keys: |
             ${{ runner.os }}-saphe-
+      - run: saphe update demo.saty
+        working-directory: ${{ env.WORKDIR }}
       - run: saphe solve demo.saty
-        working-directory: SATySFi/demo
+        working-directory: ${{ env.WORKDIR }}
       - run: saphe build demo.saty
-        working-directory: SATySFi/demo
+        working-directory: ${{ env.WORKDIR }}
+
+  build-library:
+    runs-on: ubuntu-latest
+    env:
+      WORKDIR: SATySFi/lib-satysfi/packages/stdlib/stdlib.0.0.1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./
+        with:
+          satysfi-version: branch-dev-0-1-0-separate-saphe-from-satysfi
+      - run: git clone --branch dev-0-1-0-separate-saphe-from-satysfi --depth 1
+      - uses: actions/cache@v4
+        with:
+          path: ~/.saphe
+          # SATySFi's demo does not have lock file
+          # In real project, you should use lock file like below
+          # key: ${{ runner.os }}-saphe-${{ hashFiles('./saphe.lock.yaml') }}
+          key: ${{ runner.os }}-saphe-${{ hashFiles(format('{0}/saphe.lock.expected', env.WORKDIR)) }}
+          restore-keys: |
+            ${{ runner.os }}-saphe-
+      - run: saphe update .
+        working-directory: ${{ env.WORKDIR }}
+      - run: saphe solve .
+        working-directory: ${{ env.WORKDIR }}
+      - run: saphe build .
+        working-directory: ${{ env.WORKDIR }}
+      # TODO: uncomment when test is fixed
+      # - run: saphe test .
+      #   working-directory: ${{ env.WORKDIR }}
